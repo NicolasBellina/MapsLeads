@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="popup.css" />
+    <title>MapsLeads</title>
+  </head>
+  <body>
+    <header class="header">
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+            fill="currentColor"
+          />
+          <circle cx="12" cy="9" r="2.5" fill="#fff" />
+        </svg>
+        <div class="brand-text">
+          <strong>MapsLeads</strong>
+          <span>Export de leads Google Maps</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+      <div id="status" class="status status--muted">Verification de l'onglet...</div>
+
+      <details class="filters" open>
+        <summary>Filtres &amp; options</summary>
+
+        <label class="field">
+          <span>Type d'activité</span>
+          <select id="activityType">
+            <option value="restaurant">Restaurant</option>
+            <option value="hotel">Hôtel</option>
+            <option value="generic">Générique</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>Nombre à extraire</span>
+          <input id="limitInput" type="number" min="1" max="200" value="20" />
+        </label>
+
+        <label class="field" data-filter="price">
+          <span>Prix max</span>
+          <select id="maxPrice">
+            <option value="0">Tous</option>
+            <option value="1">€</option>
+            <option value="2">€€</option>
+            <option value="3">€€€</option>
+            <option value="4">€€€€</option>
+          </select>
+        </label>
+
+        <label class="field" data-filter="rating">
+          <span>Note min</span>
+          <select id="minRating">
+            <option value="0">Toutes</option>
+            <option value="3.5">3,5+</option>
+            <option value="4">4,0+</option>
+            <option value="4.5">4,5+</option>
+          </select>
+        </label>
+
+        <label class="field" data-filter="reviews">
+          <span>Avis min (les plus fréquentés)</span>
+          <input id="minReviews" type="number" min="0" step="50" value="0" />
+        </label>
+
+        <label class="field">
+          <span>Trier par</span>
+          <select id="sortBy">
+            <option value="reviews">Avis (populaires)</option>
+            <option value="score">Opportunité</option>
+            <option value="rating">Note</option>
+            <option value="none">Ordre Maps</option>
+          </select>
+        </label>
+
+        <div class="checks">
+          <span data-filter="services" class="checks-group">
+            <label class="check"><input id="takeaway" type="checkbox" /> À emporter</label>
+            <label class="check"><input id="delivery" type="checkbox" /> Livraison</label>
+          </span>
+          <label class="check"><input id="noWebsite" type="checkbox" /> Sans site web</label>
+        </div>
+      </details>
+
+      <button id="extractBtn" class="btn btn--primary" disabled>
+        Extraire les resultats
+      </button>
+
+      <div id="results" class="results hidden">
+        <div class="results-head">
+          <span id="resultCount">0 leads trouves</span>
+        </div>
+        <ul id="preview" class="preview"></ul>
+      </div>
+
+      <button id="exportBtn" class="btn btn--accent hidden">
+        Exporter en CSV
+      </button>
+
+      <div id="paywall" class="paywall hidden">
+        <strong>Quota gratuit atteint</strong>
+        <p>Passez a la version illimitee pour exporter sans limite.</p>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div id="quota" class="quota">
+        <div class="quota-bar"><span id="quotaFill" class="quota-fill"></span></div>
+        <span id="quotaText" class="quota-text">-</span>
+      </div>
+      <div class="privacy">100% local. Vos donnees ne quittent jamais ce navigateur.</div>
+    </footer>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

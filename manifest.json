@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "MapsLeads",
+  "version": "1.0.0",
+  "description": "Extrayez les leads d'une recherche Google Maps et exportez-les en CSV. 100% local : vos donnees ne quittent jamais votre navigateur.",
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "MapsLeads"
+  },
+  "permissions": ["activeTab", "scripting", "storage"],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
