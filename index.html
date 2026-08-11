@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MapsLeads — Politique de confidentialité</title>
+    <meta
+      name="description"
+      content="Politique de confidentialité de MapsLeads, l'extension Chrome pour extraire des leads Google Maps et les exporter localement."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f8fc;
+        --card: rgba(255, 255, 255, 0.86);
+        --text: #1f2430;
+        --muted: #5d6473;
+        --border: rgba(31, 36, 48, 0.1);
+        --accent: #2563eb;
+        --accent-2: #1d4ed8;
+        --shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        line-height: 1.65;
+        color: var(--text);
+        background:
+          radial-gradient(circle at top left, rgba(37, 99, 235, 0.12), transparent 30%),
+          radial-gradient(circle at top right, rgba(16, 185, 129, 0.08), transparent 24%),
+          var(--bg);
+      }
+
+      a {
+        color: var(--accent-2);
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .wrap {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 48px 20px 72px;
+      }
+
+      .hero,
+      section {
+        background: var(--card);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(10px);
+      }
+
+      .hero {
+        border-radius: 28px;
+        padding: 32px 28px;
+        margin-bottom: 20px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(37, 99, 235, 0.09);
+        color: var(--accent-2);
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      h1 {
+        margin: 16px 0 10px;
+        line-height: 1.1;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+      }
+
+      .subtitle {
+        margin: 0;
+        max-width: 70ch;
+        color: var(--muted);
+        font-size: 1.04rem;
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.75);
+        color: var(--muted);
+        font-size: 0.93rem;
+      }
+
+
+      section {
+        border-radius: 24px;
+        padding: 24px 28px;
+        margin-top: 16px;
+      }
+
+      h2 {
+        margin: 0 0 12px;
+        font-size: 1.35rem;
+      }
+
+      p,
+      li {
+        margin: 0 0 10px;
+        color: #2b3140;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .callout {
+        padding: 16px 18px;
+        border-left: 4px solid var(--accent);
+        background: rgba(37, 99, 235, 0.06);
+        border-radius: 16px;
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 6px;
+        overflow: hidden;
+        border-radius: 16px;
+      }
+
+      .table th,
+      .table td {
+        text-align: left;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+
+      .table th {
+        width: 28%;
+        background: rgba(37, 99, 235, 0.05);
+      }
+
+      .footer {
+        margin-top: 18px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .footer a {
+        font-weight: 600;
+      }
+
+      @media (max-width: 640px) {
+        .wrap {
+          padding: 24px 14px 56px;
+        }
+
+        .hero,
+        section {
+          padding: 20px 18px;
+          border-radius: 20px;
+        }
+
+        .table th,
+        .table td {
+          display: block;
+          width: 100%;
+        }
+
+        .table tr {
+          display: block;
+          padding-bottom: 8px;
+        }
+
+        .table th {
+          padding-bottom: 4px;
+          border-bottom: none;
+        }
+
+        .table td {
+          padding-top: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="hero">
+        <span class="eyebrow">MapsLeads · Politique de confidentialité</span>
+        <h1>Confidentialité de MapsLeads</h1>
+        <p class="subtitle">
+          MapsLeads est une extension Chrome conçue pour extraire des leads visibles sur Google Maps
+          et les exporter localement. Cette page explique quelles données sont traitées, comment elles
+          sont utilisées, et quel rôle jouent les services tiers liés au paiement.
+        </p>
+        <div class="meta">
+          <span class="pill">Dernière mise à jour : 11 août 2026</span>
+          <span class="pill">Extension Chrome</span>
+          <span class="pill">Stockage local</span>
+        </div>
+      </header>
+
+      <section>
+        <h2>1. Résumé</h2>
+        <div class="callout">
+          <p>
+            MapsLeads ne collecte pas de base de données centrale, ne vend pas de données personnelles
+            et n'envoie pas les leads extraits vers un serveur MapsLeads. Les données de prospection
+            restent dans votre navigateur tant que vous ne les exportez pas vous-même.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>2. Données traitées par l'extension</h2>
+        <table class="table">
+          <tbody>
+            <tr>
+              <th>Données Google Maps</th>
+              <td>
+                Nom de l'établissement, catégorie, adresse, note, nombre d'avis, prix, services,
+                téléphone, site web et URL Maps visibles dans la page.
+              </td>
+            </tr>
+            <tr>
+              <th>Leads extraits</th>
+              <td>
+                Les résultats extraits peuvent être conservés localement dans <code>chrome.storage.local</code>
+                pour l'affichage, la session d'appels et les exports.
+              </td>
+            </tr>
+            <tr>
+              <th>Fichiers exportés</th>
+              <td>
+                Les CSV et XLSX sont générés localement dans le navigateur puis téléchargés sur votre
+                appareil. Ils ne sont pas envoyés à MapsLeads.
+              </td>
+            </tr>
+            <tr>
+              <th>Paiement et accès</th>
+              <td>
+                La gestion de l'essai et de l'abonnement passe par ExtensionPay et Stripe. Ces services
+                peuvent traiter des informations liées au compte, à l'abonnement et au paiement.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>3. Comment les données sont utilisées</h2>
+        <ul>
+          <li>afficher et filtrer les résultats extraits depuis Google Maps ;</li>
+          <li>préparer des exports CSV ou XLSX ;</li>
+          <li>gérer la session d'appels et l'état d'avancement des leads ;</li>
+          <li>activer l'essai gratuit, l'abonnement et la restauration d'accès ;</li>
+          <li>assurer le fonctionnement technique de l'extension dans votre navigateur.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>4. Partage des données</h2>
+        <p>
+          MapsLeads n'exploite pas de serveur backend propriétaire pour stocker vos leads. Les seules
+          communications externes identifiables dans l'extension concernent :
+        </p>
+        <ul>
+          <li><strong>Google Maps</strong> : les données sont lues depuis la page affichée dans votre navigateur ;</li>
+          <li><strong>ExtensionPay</strong> : pour l'essai, la connexion et la validation de l'accès ;</li>
+          <li><strong>Stripe</strong> : pour le traitement du paiement lorsque vous souscrivez un abonnement.</li>
+        </ul>
+        <p>
+          MapsLeads ne transmet pas automatiquement votre base de leads vers un service externe.
+        </p>
+      </section>
+
+      <section>
+        <h2>5. Conservation</h2>
+        <p>
+          Les données extraites sont conservées localement dans le navigateur jusqu'à ce que vous les
+          supprimiez, que vous réinitialisiez l'extension ou que vous effaciez les données du navigateur.
+          Les fichiers exportés restent sur votre ordinateur ou dans l'emplacement où vous les avez
+          téléchargés.
+        </p>
+      </section>
+
+      <section>
+        <h2>6. Vos choix</h2>
+        <ul>
+          <li>vous pouvez fermer l'extension sans extraire de données ;</li>
+          <li>vous pouvez supprimer les données locales de MapsLeads dans Chrome ;</li>
+          <li>vous pouvez désinstaller l'extension à tout moment ;</li>
+          <li>vous pouvez gérer ou annuler votre abonnement via ExtensionPay / Stripe.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>7. Mineurs</h2>
+        <p>
+          MapsLeads n'est pas destiné aux enfants de moins de 13 ans. Nous ne collectons pas
+          sciemment de données personnelles d'enfants.
+        </p>
+      </section>
+
+      <section>
+        <h2>8. Modifications de cette politique</h2>
+        <p>
+          Cette politique peut être mise à jour si l'extension évolue, par exemple en cas de nouvelle
+          fonctionnalité, d'ajout d'un service tiers ou de changement du mode de stockage. La date de
+          mise à jour sera révisée en conséquence.
+        </p>
+      </section>
+
+      <section>
+        <h2>9. Contact</h2>
+        <p>
+          Pour toute question sur cette politique de confidentialité ou sur MapsLeads, contactez :
+          <a href="mailto:nicolasbellina72@gmail.com">nicolasbellina72@gmail.com</a>
+        </p>
+      </section>
+
+      <div class="footer">
+        <p>
+          MapsLeads · Politique de confidentialité · Page prête pour GitHub Pages.
+        </p>
+      </div>
+    </main>
+  </body>
+</html>
+
