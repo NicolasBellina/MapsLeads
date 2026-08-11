@@ -103,9 +103,25 @@
         Exporter en CSV
       </button>
 
+      <button id="sessionBtn" class="btn btn--session">
+        Ouvrir la session d'appels
+      </button>
+
       <div id="paywall" class="paywall hidden">
-        <strong>Quota gratuit atteint</strong>
-        <p>Passez a la version illimitee pour exporter sans limite.</p>
+        <strong id="paywallTitle">Essai gratuit 2 jours</strong>
+        <p id="paywallText">
+          Exports illimites et session d'appels complete pendant 2 jours, sans
+          carte bancaire.
+        </p>
+        <button id="trialBtn" class="btn btn--trial">
+          Demarrer l'essai gratuit 2 jours
+        </button>
+        <button id="subscribeBtn" class="btn btn--trial hidden">
+          S'abonner — 15 €/mois
+        </button>
+        <div class="or-divider"><span>Deja abonne ?</span></div>
+        <button id="loginBtn" class="btn btn--sm">Restaurer mon abonnement</button>
+        <div id="accessStatus" class="license-status hidden"></div>
       </div>
     </main>
 
@@ -117,6 +133,7 @@
       <div class="privacy">100% local. Vos donnees ne quittent jamais ce navigateur.</div>
     </footer>
 
+    <script src="vendor/ExtPay.js"></script>
     <script type="module" src="popup.js"></script>
   </body>
 </html>

@@ -27,6 +27,9 @@ const WIDTHS = {
   services: 24,
   score: 12,
   mapsUrl: 48,
+  callStatus: 16,
+  callNote: 44,
+  callbackDate: 16,
 };
 const DEFAULT_WIDTH = 18;
 

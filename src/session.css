@@ -1,0 +1,506 @@
+:root {
+  --accent: #2563eb;
+  --green: #059669;
+  --ink: #0f172a;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --bg: #f1f5f9;
+  --card-bg: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ---- Sticky top ---- */
+
+.s-sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* ---- Header ---- */
+
+.s-header {
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 24px;
+  height: 24px;
+  color: var(--accent);
+  flex: none;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.brand-text strong {
+  font-size: 14px;
+}
+
+.brand-text span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.s-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ---- Buttons ---- */
+
+.btn {
+  appearance: none;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.btn--accent {
+  background: var(--green);
+  color: #fff;
+}
+
+.btn--accent:hover {
+  background: #047857;
+}
+
+.btn--ghost {
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.btn--ghost:hover {
+  background: #e2e8f0;
+}
+
+/* ---- Stats bar ---- */
+
+.s-stats-bar {
+  border-bottom: 1px solid var(--line);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-tile {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  flex: none;
+}
+
+.stat-val {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.stat-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--line);
+  flex: none;
+}
+
+.dist-bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+  display: flex;
+  max-width: 220px;
+  margin-left: auto;
+}
+
+.dist-seg {
+  height: 100%;
+  min-width: 3px;
+  transition: width 0.3s;
+}
+
+/* ---- Filter bar ---- */
+
+.s-filters {
+  border-bottom: 1px solid var(--line);
+  padding: 8px 24px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.15s;
+}
+
+.filter-btn:hover {
+  border-color: #94a3b8;
+  color: var(--ink);
+}
+
+.filter-btn.active {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+/* ---- Liste ---- */
+
+.s-list {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 20px 24px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ---- Lead card (liste) ---- */
+
+.lead-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  border-left: 4px solid #94a3b8;
+  padding: 14px 16px;
+  transition: box-shadow 0.15s;
+}
+
+.lead-card:hover {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+}
+
+.lead-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.lead-name {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.lead-top-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.score-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.status-select {
+  flex: none;
+  border: 1.5px solid #94a3b8;
+  border-radius: 7px;
+  padding: 5px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  background: #fff;
+  cursor: pointer;
+}
+
+.lead-meta {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.lead-links {
+  display: flex;
+  gap: 8px;
+  margin-top: 9px;
+  flex-wrap: wrap;
+}
+
+.lead-link {
+  font-size: 12.5px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid;
+  transition: background 0.1s;
+  white-space: nowrap;
+}
+
+.lead-link--phone {
+  color: #065f46;
+  border-color: #a7f3d0;
+  background: #ecfdf5;
+}
+
+.lead-link--phone:hover {
+  background: #d1fae5;
+}
+
+.lead-link--web {
+  color: #1e40af;
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lead-link--web:hover {
+  background: #dbeafe;
+}
+
+/* ---- Date de rappel ---- */
+
+.date-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 9px;
+  flex-wrap: wrap;
+}
+
+.date-label {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.date-input {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: var(--ink);
+  background: #fff;
+  cursor: pointer;
+}
+
+.callback-badge {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+/* ---- Note ---- */
+
+.note-wrap {
+  margin-top: 9px;
+}
+
+.note-area {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--bg);
+  resize: vertical;
+  min-height: 52px;
+  transition: border-color 0.15s;
+}
+
+.note-area::placeholder {
+  color: #94a3b8;
+}
+
+.note-area:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #fff;
+}
+
+/* ---- Kanban ---- */
+
+.s-kanban {
+  display: flex;
+  gap: 14px;
+  padding: 20px 24px 60px;
+  overflow-x: auto;
+  align-items: flex-start;
+  min-height: calc(100vh - 160px);
+}
+
+.k-col {
+  flex: none;
+  width: 240px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 120px;
+}
+
+.k-col.drag-over {
+  border-color: var(--accent);
+  background: #eff6ff;
+}
+
+.k-head {
+  padding: 10px 13px 9px;
+  border-bottom: 1px solid var(--line);
+  border-top: 3px solid #94a3b8;
+  border-radius: 9px 9px 0 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.k-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.k-cards {
+  padding: 10px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.k-card {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  border-top: 3px solid #94a3b8;
+  padding: 10px 11px;
+  cursor: grab;
+  transition: box-shadow 0.15s, opacity 0.15s;
+  user-select: none;
+}
+
+.k-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+}
+
+.k-card.dragging {
+  opacity: 0.4;
+  cursor: grabbing;
+}
+
+.k-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 5px;
+  line-height: 1.3;
+}
+
+.k-badges {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.k-phone {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.k-note {
+  margin-top: 7px;
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.4;
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+
+/* ---- Empty state ---- */
+
+.s-empty {
+  max-width: 860px;
+  margin: 80px auto;
+  padding: 0 24px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.s-empty p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.s-empty p + p {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.hidden {
+  display: none !important;
+}

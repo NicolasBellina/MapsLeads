@@ -23,6 +23,9 @@ export const ALL_COLUMNS = {
   services: "Services",
   score: "Opportunité",
   mapsUrl: "Lien Maps",
+  callStatus: "Statut",
+  callNote: "Note appel",
+  callbackDate: "Date rappel",
 };
 
 // Jeu complet par defaut (contact d'abord), utilise si aucun preset n'est passe.

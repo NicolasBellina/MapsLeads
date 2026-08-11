@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="session.css" />
+    <title>MapsLeads — Session d'appels</title>
+  </head>
+  <body>
+    <!-- Bloc sticky : header + stats + filtres -->
+    <div class="s-sticky-top" id="sSticky">
+
+      <header class="s-header">
+        <div class="brand">
+          <svg class="logo" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="currentColor"/>
+            <circle cx="12" cy="9" r="2.5" fill="#fff"/>
+          </svg>
+          <div class="brand-text">
+            <strong>Session d'appels</strong>
+            <span>MapsLeads</span>
+          </div>
+        </div>
+        <div class="s-header-actions">
+          <button id="viewToggle" class="btn btn--ghost">Vue Kanban</button>
+          <button id="exportBtn" class="btn btn--accent">Exporter XLSX</button>
+        </div>
+      </header>
+
+      <!-- Barre de stats -->
+      <div class="s-stats-bar">
+        <div class="stat-tile">
+          <div class="stat-val" id="statTotal">-</div>
+          <div class="stat-label">leads</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-tile">
+          <div class="stat-val" id="statCalled">-</div>
+          <div class="stat-label">appelés</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-tile">
+          <div class="stat-val" id="statInterested">-</div>
+          <div class="stat-label">intéressés</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-tile">
+          <div class="stat-val" id="statConversion">-</div>
+          <div class="stat-label">conversion</div>
+        </div>
+        <div class="dist-bar" id="distBar"></div>
+      </div>
+
+      <!-- Filtres (vue liste uniquement) -->
+      <div class="s-filters" id="sFilters">
+        <button class="filter-btn active" data-status="all">Tous</button>
+        <button class="filter-btn" data-status="pending">A appeler</button>
+        <button class="filter-btn" data-status="no_answer">Pas de reponse</button>
+        <button class="filter-btn" data-status="interested">Interesse</button>
+        <button class="filter-btn" data-status="not_interested">Pas interesse</button>
+        <button class="filter-btn" data-status="callback">Rappeler</button>
+      </div>
+
+    </div>
+
+    <!-- Vue liste -->
+    <main class="s-list" id="listView"></main>
+
+    <!-- Vue kanban -->
+    <div class="s-kanban" id="kanbanView" hidden></div>
+
+    <!-- Etat vide -->
+    <div class="s-empty hidden" id="emptyState">
+      <p>Aucune session en cours.</p>
+      <p>Extrayez des leads depuis le popup MapsLeads puis cliquez "Ouvrir la session d'appels".</p>
+    </div>
+
+    <script src="vendor/ExtPay.js"></script>
+    <script type="module" src="session.js"></script>
+  </body>
+</html>

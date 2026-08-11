@@ -1,13 +1,22 @@
 // Orchestration du popup : detecte l'onglet Maps, injecte le scraper a la
 // demande, gere le quota, genere et telecharge le CSV.
-import { getState, canExport, recordExport, rowCap } from "./lib/quota.js";
+import {
+  getAccess,
+  openTrialPage,
+  openPaymentPage,
+  openLoginPage,
+  formatTimeLeft,
+  invalidate,
+} from "./lib/access.js";
 import { buildXlsx, downloadXlsx } from "./lib/xlsx.js";
 import { getPreset } from "./lib/presets.js";
+import { TRIAL_DAYS } from "./lib/config.js";
 
 const MAPS_URL_RE = /^https:\/\/www\.google\.[^/]+\/maps/;
-// Plafond de collecte en premium : l'enrichissement ouvre chaque fiche (~1,5 s),
+// Plafond de collecte : l'enrichissement ouvre chaque fiche (~1,5 s),
 // on borne pour eviter des extractions interminables.
 const PREMIUM_CAP = 120;
+const TRIAL_TOTAL_MS = TRIAL_DAYS * 24 * 60 * 60 * 1000;
 
 const el = (id) => document.getElementById(id);
 const ui = {
@@ -29,6 +38,13 @@ const ui = {
   delivery: el("delivery"),
   noWebsite: el("noWebsite"),
   sortBy: el("sortBy"),
+  sessionBtn: el("sessionBtn"),
+  paywallTitle: el("paywallTitle"),
+  paywallText: el("paywallText"),
+  trialBtn: el("trialBtn"),
+  subscribeBtn: el("subscribeBtn"),
+  loginBtn: el("loginBtn"),
+  accessStatus: el("accessStatus"),
 };
 
 // Affiche uniquement les filtres pertinents pour le type d'activite choisi.
@@ -94,21 +110,70 @@ function isMapsTab(tab) {
   return !!(tab && tab.url && MAPS_URL_RE.test(tab.url));
 }
 
-async function renderQuota() {
-  const s = await getState();
-  if (s.testMode) {
+// Contenu du panneau paywall selon l'etat d'acces. Le panneau n'est affiche
+// que lorsqu'une action est bloquee, ou quand l'essai n'a pas encore demarre.
+const PAYWALL_COPY = {
+  none: {
+    title: "Essai gratuit 2 jours",
+    text: "Exports illimites et session d'appels complete pendant 2 jours, sans carte bancaire.",
+    trial: true,
+    subscribe: false,
+  },
+  trial_expired: {
+    title: "Essai termine",
+    text: "Votre essai de 2 jours est ecoule. Abonnez-vous pour continuer a extraire et exporter vos leads.",
+    trial: false,
+    subscribe: true,
+  },
+  offline: {
+    title: "Statut indisponible",
+    text: "Impossible de verifier votre abonnement. Verifiez votre connexion puis rouvrez le popup.",
+    trial: false,
+    subscribe: true,
+  },
+};
+
+function renderPaywall(access) {
+  const copy = PAYWALL_COPY[access.status] || PAYWALL_COPY.trial_expired;
+  ui.paywallTitle.textContent = copy.title;
+  ui.paywallText.textContent = copy.text;
+  ui.trialBtn.classList.toggle("hidden", !copy.trial);
+  ui.subscribeBtn.classList.toggle("hidden", !copy.subscribe);
+}
+
+async function renderAccess() {
+  const access = await getAccess();
+  renderPaywall(access);
+
+  if (access.status === "dev") {
     ui.quotaFill.style.width = "100%";
-    ui.quotaText.textContent = "Mode test - exports illimites";
-    return;
-  }
-  if (s.isPremium) {
+    ui.quotaText.textContent = "Mode DEV - acces illimite";
+  } else if (access.status === "paid") {
     ui.quotaFill.style.width = "100%";
-    ui.quotaText.textContent = "Premium - illimite";
-    return;
+    ui.quotaText.textContent = "Abonnement actif";
+  } else if (access.status === "trial") {
+    const total = TRIAL_TOTAL_MS;
+    ui.quotaFill.style.width = `${Math.max(0, Math.min(100, (access.msLeft / total) * 100))}%`;
+    ui.quotaText.textContent = `Essai : ${formatTimeLeft(access.msLeft)} restant`;
+  } else {
+    ui.quotaFill.style.width = "0%";
+    ui.quotaText.textContent =
+      access.status === "none" ? "Essai non demarre" : "Essai termine";
   }
-  const remaining = Math.max(0, s.freeLimit - s.exportsUsed);
-  ui.quotaFill.style.width = `${(s.exportsUsed / s.freeLimit) * 100}%`;
-  ui.quotaText.textContent = `${remaining}/${s.freeLimit} exports gratuits`;
+
+  // Sans acces, l'essai n'a pas encore demarre : on met le paywall en avant.
+  ui.paywall.classList.toggle("hidden", access.allowed);
+  return access;
+}
+
+// Refuse l'action et affiche le paywall. Retourne true si l'acces est ouvert.
+async function requireAccess(message) {
+  const access = await getAccess();
+  if (access.allowed) return true;
+  renderPaywall(access);
+  ui.paywall.classList.remove("hidden");
+  setStatus(message, "warn");
+  return false;
 }
 
 // Rendu de l'apercu : textContent uniquement (jamais innerHTML) pour eviter
@@ -149,16 +214,17 @@ async function handleExtract() {
     return;
   }
 
+  if (!(await requireAccess("Demarrez l'essai gratuit pour extraire des leads."))) {
+    return;
+  }
+
   ui.extractBtn.classList.add("is-loading");
   ui.extractBtn.disabled = true;
   ui.paywall.classList.add("hidden");
 
-  // Nombre de leads a collecter/enrichir. En gratuit on borne au plafond de
-  // lignes ; sinon on respecte le champ "Nombre a extraire" (defaut 20), lui
-  // meme borne a PREMIUM_CAP pour eviter les extractions interminables.
-  const cap = await rowCap();
-  const requested = Math.max(1, Math.min(parseInt(ui.limitInput.value, 10) || 20, PREMIUM_CAP));
-  const count = cap === Infinity ? requested : Math.min(requested, cap);
+  // Nombre de leads a collecter/enrichir : le champ "Nombre a extraire"
+  // (defaut 20), borne a PREMIUM_CAP pour eviter les extractions interminables.
+  const count = Math.max(1, Math.min(parseInt(ui.limitInput.value, 10) || 20, PREMIUM_CAP));
   const filters = readFilters();
   setStatus(
     `Extraction en cours (jusqu'a ${count} fiches, ~${Math.ceil((count * 1.5) / 5) * 5}s). Gardez ce popup ouvert.`,
@@ -194,6 +260,7 @@ async function handleExtract() {
       setStatus("Aucun lead extrait sur cette page.", "warn");
     } else {
       setStatus(`${leads.length} leads prets a exporter.`, "ok");
+      await chrome.storage.local.set({ popupLeadsCache: leads, callSession: leads });
     }
     renderPreview();
   } catch (e) {
@@ -207,46 +274,95 @@ async function handleExtract() {
 async function handleExport() {
   if (leads.length === 0) return;
 
-  if (!(await canExport())) {
-    ui.paywall.classList.remove("hidden");
-    return;
-  }
+  if (!(await requireAccess("Abonnez-vous pour exporter vos leads."))) return;
 
-  const cap = await rowCap();
-  const rows = leads.slice(0, cap);
   const preset = getPreset(ui.activityType.value);
-  const xlsx = buildXlsx(rows, preset.columns);
+  const xlsx = buildXlsx(leads, preset.columns);
   const stamp = new Date().toISOString().slice(0, 10);
   downloadXlsx(xlsx, `mapsleads-${ui.activityType.value}-${stamp}.xlsx`);
 
-  await recordExport();
-  await renderQuota();
-
-  const s = await getState();
-  if (!s.isPremium && leads.length > cap) {
-    setStatus(
-      `Export gratuit limite a ${cap} lignes (${leads.length} trouves). Passez en premium pour tout exporter.`,
-      "warn"
-    );
-  } else {
-    setStatus(`${rows.length} leads exportes en Excel.`, "ok");
-  }
+  await renderAccess();
+  setStatus(`${leads.length} leads exportes en Excel.`, "ok");
 }
 
 async function init() {
   const tab = await getActiveTab();
+
+  // Restaure les leads de la derniere extraction (persiste entre changements d'onglets)
+  const cache = await chrome.storage.local.get("popupLeadsCache");
+  if (cache.popupLeadsCache?.length > 0) {
+    leads = cache.popupLeadsCache;
+    renderPreview();
+    ui.exportBtn.classList.remove("hidden");
+  }
+
   if (isMapsTab(tab)) {
-    setStatus("Recherche Google Maps detectee.", "ok");
+    setStatus(
+      leads.length > 0
+        ? `${leads.length} leads en memoire. Cliquez "Extraire" pour actualiser.`
+        : "Recherche Google Maps detectee.",
+      leads.length > 0 ? "muted" : "ok"
+    );
     ui.extractBtn.disabled = false;
   } else {
-    setStatus("Ouvrez une recherche Google Maps pour commencer.", "warn");
+    setStatus(
+      leads.length > 0
+        ? `${leads.length} leads en memoire.`
+        : "Ouvrez une recherche Google Maps pour commencer.",
+      leads.length > 0 ? "muted" : "warn"
+    );
     ui.extractBtn.disabled = true;
   }
-  await renderQuota();
+  await renderAccess();
+}
+
+function showAccessMessage(text, kind) {
+  ui.accessStatus.className = `license-status license-status--${kind}`;
+  ui.accessStatus.textContent = text;
+  ui.accessStatus.classList.remove("hidden");
+}
+
+// Les pages ExtensionPay (essai, paiement, connexion) s'ouvrent dans un onglet
+// separe. Au retour sur le popup on rafraichit le statut.
+async function openExtPayPage(open, pendingText) {
+  ui.accessStatus.classList.add("hidden");
+  try {
+    await open();
+    showAccessMessage(pendingText, "ok");
+    invalidate();
+  } catch {
+    showAccessMessage("Impossible d'ouvrir la page. Verifiez votre connexion.", "err");
+  }
 }
 
 ui.extractBtn.addEventListener("click", handleExtract);
 ui.exportBtn.addEventListener("click", handleExport);
+ui.sessionBtn.addEventListener("click", async () => {
+  if (!(await requireAccess("Demarrez l'essai gratuit pour ouvrir la session d'appels."))) {
+    return;
+  }
+  chrome.tabs.create({ url: chrome.runtime.getURL("src/session.html") });
+});
+ui.trialBtn.addEventListener("click", () =>
+  openExtPayPage(
+    openTrialPage,
+    "Entrez votre email dans l'onglet ouvert, puis cliquez le lien recu pour demarrer l'essai."
+  )
+);
+ui.subscribeBtn.addEventListener("click", () =>
+  openExtPayPage(openPaymentPage, "Finalisez le paiement dans l'onglet ouvert.")
+);
+ui.loginBtn.addEventListener("click", () =>
+  openExtPayPage(openLoginPage, "Connectez-vous dans l'onglet ouvert pour restaurer votre abonnement.")
+);
 ui.activityType.addEventListener("change", applyPreset);
+
+// Le popup reste ouvert pendant que l'utilisateur paie dans un autre onglet :
+// on revalide le statut des qu'il revient dessus.
+window.addEventListener("focus", () => {
+  invalidate();
+  renderAccess();
+});
+
 applyPreset();
 init();

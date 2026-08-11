@@ -7,6 +7,16 @@
     "default_popup": "src/popup.html",
     "default_title": "MapsLeads"
   },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://extensionpay.com/*"],
+      "js": ["src/vendor/ExtPay.js"],
+      "run_at": "document_start"
+    }
+  ],
   "permissions": ["activeTab", "scripting", "storage"],
   "icons": {
     "16": "icons/icon16.png",
