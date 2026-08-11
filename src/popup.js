@@ -115,9 +115,9 @@ function isMapsTab(tab) {
 const PAYWALL_COPY = {
   none: {
     title: "Essai gratuit 2 jours",
-    text: "Exports illimites et session d'appels complete pendant 2 jours, sans carte bancaire.",
+    text: "Exports illimites et session d'appels complete pendant 2 jours, sans carte bancaire. Vous pouvez aussi vous abonner directement.",
     trial: true,
-    subscribe: false,
+    subscribe: true,
   },
   trial_expired: {
     title: "Essai termine",
@@ -148,6 +148,9 @@ async function renderAccess() {
   if (access.status === "dev") {
     ui.quotaFill.style.width = "100%";
     ui.quotaText.textContent = "Mode DEV - acces illimite";
+  } else if (access.status === "demo") {
+    ui.quotaFill.style.width = "100%";
+    ui.quotaText.textContent = "Compte demo - acces illimite";
   } else if (access.status === "paid") {
     ui.quotaFill.style.width = "100%";
     ui.quotaText.textContent = "Abonnement actif";

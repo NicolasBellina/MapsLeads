@@ -69,7 +69,11 @@ Les deux doivent être identiques, sinon le statut de paiement ne remonte jamais
 
 ## Étape 5 — Tester en mode test
 
-ExtensionPay démarre en **mode test**, branché sur Stripe en test. Rien à changer.
+ExtensionPay démarre en **mode test**. Rien à changer.
+
+> **Important** : en mode test, ExtensionPay n'utilise pas votre compte Stripe. Aucun produit, client, abonnement ni paiement n'apparaîtra dans votre dashboard Stripe, même en basculant celui-ci sur "Mode test". C'est normal et documenté par ExtensionPay. Vos données Stripe ne se remplissent qu'en mode live.
+>
+> Corollaire : les outils Stripe (Simulations / horloges de test, annulation immédiate depuis le dashboard, remboursements) ne sont pas utilisables pendant cette phase.
 
 1. Chrome → `chrome://extensions` → "Mode développeur" → "Charger l'extension non empaquetée"
 2. Ouvrir le popup : le panneau "Essai gratuit 2 jours" s'affiche
@@ -84,13 +88,47 @@ ExtensionPay démarre en **mode test**, branché sur Stripe en test. Rien à cha
 
 Passer temporairement `TRIAL_DAYS` à `0` dans `src/lib/config.js`, recharger l'extension : le paywall "Essai terminé" doit apparaître et bloquer extraction, export et session d'appels. Remettre `2` ensuite.
 
+### Comptes de démonstration
+
+Pour vous donner un accès permanent, ou en offrir un à un testeur, ajoutez l'email dans `DEMO_EMAILS` (`src/lib/config.js`) :
+
+```js
+export const DEMO_EMAILS = ["vous@exemple.com", "testeur@exemple.com"];
+```
+
+La personne doit ensuite cliquer **Restaurer mon abonnement** dans le popup et se connecter avec cet email : ExtensionPay ne communique l'adresse à l'extension qu'après cette connexion. Le pied de page affiche alors "Compte demo - acces illimite".
+
+Ce mécanisme est indépendant d'ExtensionPay et fonctionne aussi bien en mode test qu'en mode live, contrairement à la fonction "Add free users" du dashboard, réservée au mode test. Il remplace les anciennes clés beta.
+
+Ne mettez dans cette liste que des emails dont vous maîtrisez l'usage : quiconque accède à la boîte mail correspondante obtient l'accès complet.
+
+### Tester la perte d'accès
+
+Annulation immédiate, fin de période dépassée et échec de paiement aboutissent tous à `user.paid === false`, testé au même endroit (`src/lib/access.js`). Le test `TRIAL_DAYS = 0` ci-dessus couvre donc déjà ce chemin de code ; il n'est pas nécessaire de forcer une annulation dans Stripe.
+
+Depuis le portail client ExtensionPay, "Annuler l'abonnement" programme une annulation en **fin de période** : l'accès est maintenu jusqu'à la date de renouvellement, ce qui est le comportement voulu pour un client ayant payé son mois.
+
 ---
 
 ## Étape 6 — Passer en production
 
-1. Dans le dashboard ExtensionPay, basculer l'extension en **mode live**
-2. Vérifier que `MODE = "PROD"` dans `src/lib/config.js`
-3. Publier l'extension sur le Chrome Web Store
+Il n'y a **pas d'interrupteur** test/live dans ExtensionPay. La bascule est automatique et repose sur le mode d'installation de l'extension.
+
+ExtPay lit `installType` via l'API `management` du navigateur (`src/vendor/ExtPay.js`) :
+
+- extension chargée décompressée en mode développeur → `installType: "development"` → mode test
+- extension installée depuis le Chrome Web Store → `installType: "normal"` → mode live
+
+Vos utilisateurs finaux ne verront donc jamais la bannière "MODE TEST", ni la demande de mot de passe développeur : ils arrivent directement sur le Checkout Stripe réel.
+
+Checklist avant publication :
+
+1. Vérifier que `MODE = "PROD"` et `TRIAL_DAYS = 2` dans `src/lib/config.js`
+2. Vérifier le contenu de `DEMO_EMAILS` (retirer les emails de test inutiles)
+3. Activer le **portail client Stripe en mode live** — lien "Enable the live Stripe customer portal" sur l'accueil ExtensionPay. Sans lui, vos clients ne peuvent pas annuler leur abonnement eux-mêmes.
+4. Publier l'extension sur le Chrome Web Store
+
+> Le mode est figé dans la clé d'API au moment de sa création (`body.development` dans `ExtPay.js`). Les comptes créés pendant vos tests resteront donc des comptes de test et ne basculeront pas en production.
 
 ---
 
@@ -130,7 +168,7 @@ Si vous vendez largement hors de France, envisagez [Stripe Tax](https://dashboar
 
 | Fichier | Rôle |
 |---|---|
-| `src/vendor/ExtPay.js` | Librairie ExtensionPay (v3.1.2), copiée depuis npm, AGPLv3 |
+| `src/vendor/ExtPay.js` | Librairie ExtensionPay (v3.1.2), copiée depuis npm. Le paquet déclare `LGPL-3.0`, l'en-tête du source indique AGPLv3 ; le fichier de licence est conservé dans `src/vendor/ExtPay.LICENSE` |
 | `src/background.js` | Service worker, appelle `extpay.startBackground()` (obligatoire) |
 | `src/lib/config.js` | `EXTENSION_ID`, `TRIAL_DAYS`, `MODE` |
 | `src/lib/access.js` | Traduit le statut ExtensionPay en état d'accès applicatif |

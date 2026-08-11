@@ -7,7 +7,9 @@
 // globale : dans le popup et la page session via une balise <script>, dans le
 // service worker via importScripts.
 
-import { EXTENSION_ID, TRIAL_DAYS, MODE } from "./config.js";
+import { EXTENSION_ID, TRIAL_DAYS, MODE, DEMO_EMAILS } from "./config.js";
+
+const DEMO = new Set(DEMO_EMAILS.map((e) => e.trim().toLowerCase()));
 
 const TRIAL_MS = TRIAL_DAYS * 24 * 60 * 60 * 1000;
 const CACHE_TTL = 60 * 1000; // evite un appel reseau a chaque interaction
@@ -28,6 +30,13 @@ function extpay() {
 
 // Traduit un objet user ExtensionPay en etat d'acces applicatif.
 function toAccess(user) {
+  const email = user.email || null;
+
+  // Compte de demonstration : prioritaire sur tout le reste, jamais expire.
+  if (email && DEMO.has(email.trim().toLowerCase())) {
+    return { allowed: true, status: "demo", msLeft: 0, email };
+  }
+
   if (user.paid) {
     return { allowed: true, status: "paid", msLeft: 0, email: user.email || null };
   }
