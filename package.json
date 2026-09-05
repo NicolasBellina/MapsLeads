@@ -1,9 +1,12 @@
 {
   "name": "mapsleads",
-  "version": "1.0.0",
-  "description": "Extension Chrome freemium : extraction de leads Google Maps vers CSV, 100% local.",
+  "version": "2.1.1",
+  "description": "Extension Chrome : recherche de leads entreprises dans la base SIRENE (INSEE), export Excel et suivi d'appels.",
   "private": true,
   "scripts": {
-    "build:icons": "node scripts/generate-icons.js"
-  }
+    "build:icons": "node scripts/generate-icons.js",
+    "package": "bash scripts/package.sh",
+    "store": "node store/build.mjs"
+  },
+  "type": "module"
 }

@@ -176,6 +176,37 @@ body {
   background: var(--line);
 }
 
+/* Ligne de saisie de cle de licence (paywall). */
+.license-row {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.license-input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 7px 9px;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: 0.4px;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+.license-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgb(37 99 235 / 0.15);
+}
+
+.license-row .btn--sm {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
 .license-status {
   margin-top: 7px;
   font-size: 11.5px;

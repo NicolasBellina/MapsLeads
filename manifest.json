@@ -1,23 +1,20 @@
 {
   "manifest_version": 3,
   "name": "MapsLeads",
-  "version": "1.0.0",
-  "description": "Extrayez les leads d'une recherche Google Maps et exportez-les en CSV. 100% local : vos donnees ne quittent jamais votre navigateur.",
+  "version": "2.1.1",
+  "description": "Trouvez des prospects par métier et par ville dans la base SIRENE de l'INSEE. Export Excel et suivi d'appels intégré.",
   "action": {
     "default_popup": "src/popup.html",
     "default_title": "MapsLeads"
   },
-  "background": {
-    "service_worker": "src/background.js"
-  },
-  "content_scripts": [
-    {
-      "matches": ["https://extensionpay.com/*"],
-      "js": ["src/vendor/ExtPay.js"],
-      "run_at": "document_start"
-    }
+  "permissions": [
+    "storage"
   ],
-  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": [
+    "https://recherche-entreprises.api.gouv.fr/*",
+    "https://geo.api.gouv.fr/*",
+    "https://api.lemonsqueezy.com/v1/licenses/*"
+  ],
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",

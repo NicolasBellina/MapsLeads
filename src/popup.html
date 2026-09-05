@@ -18,24 +18,25 @@
         </svg>
         <div class="brand-text">
           <strong>MapsLeads</strong>
-          <span>Export de leads Google Maps</span>
+          <span>Leads entreprises SIRENE</span>
         </div>
       </div>
     </header>
 
     <main class="main">
-      <div id="status" class="status status--muted">Verification de l'onglet...</div>
+      <div id="status" class="status status--muted">Prêt à rechercher.</div>
 
       <details class="filters" open>
-        <summary>Filtres &amp; options</summary>
+        <summary>Recherche &amp; options</summary>
 
         <label class="field">
-          <span>Type d'activité</span>
-          <select id="activityType">
-            <option value="restaurant">Restaurant</option>
-            <option value="hotel">Hôtel</option>
-            <option value="generic">Générique</option>
-          </select>
+          <span>Métier ou activité</span>
+          <input id="searchQuery" type="text" placeholder="restaurant, plombier, coiffeur..." autocomplete="off" />
+        </label>
+
+        <label class="field">
+          <span>Ville, département ou code postal</span>
+          <input id="locationInput" type="text" placeholder="Tours, 37 ou 37000..." autocomplete="off" />
         </label>
 
         <label class="field">
@@ -43,64 +44,29 @@
           <input id="limitInput" type="number" min="1" max="200" value="20" />
         </label>
 
-        <label class="field" data-filter="price">
-          <span>Prix max</span>
-          <select id="maxPrice">
-            <option value="0">Tous</option>
-            <option value="1">€</option>
-            <option value="2">€€</option>
-            <option value="3">€€€</option>
-            <option value="4">€€€€</option>
-          </select>
-        </label>
-
-        <label class="field" data-filter="rating">
-          <span>Note min</span>
-          <select id="minRating">
-            <option value="0">Toutes</option>
-            <option value="3.5">3,5+</option>
-            <option value="4">4,0+</option>
-            <option value="4.5">4,5+</option>
-          </select>
-        </label>
-
-        <label class="field" data-filter="reviews">
-          <span>Avis min (les plus fréquentés)</span>
-          <input id="minReviews" type="number" min="0" step="50" value="0" />
-        </label>
-
         <label class="field">
           <span>Trier par</span>
           <select id="sortBy">
-            <option value="reviews">Avis (populaires)</option>
             <option value="score">Opportunité</option>
-            <option value="rating">Note</option>
-            <option value="none">Ordre Maps</option>
+            <option value="creation">Plus récents</option>
+            <option value="name">Alphabétique</option>
           </select>
         </label>
-
-        <div class="checks">
-          <span data-filter="services" class="checks-group">
-            <label class="check"><input id="takeaway" type="checkbox" /> À emporter</label>
-            <label class="check"><input id="delivery" type="checkbox" /> Livraison</label>
-          </span>
-          <label class="check"><input id="noWebsite" type="checkbox" /> Sans site web</label>
-        </div>
       </details>
 
-      <button id="extractBtn" class="btn btn--primary" disabled>
-        Extraire les resultats
+      <button id="extractBtn" class="btn btn--primary">
+        Rechercher des leads
       </button>
 
       <div id="results" class="results hidden">
         <div class="results-head">
-          <span id="resultCount">0 leads trouves</span>
+          <span id="resultCount">0 lead trouvé</span>
         </div>
         <ul id="preview" class="preview"></ul>
       </div>
 
       <button id="exportBtn" class="btn btn--accent hidden">
-        Exporter en CSV
+        Exporter en Excel
       </button>
 
       <button id="sessionBtn" class="btn btn--session">
@@ -108,20 +74,24 @@
       </button>
 
       <div id="paywall" class="paywall hidden">
-        <strong id="paywallTitle">Essai gratuit 2 jours</strong>
-        <p id="paywallText">
-          Exports illimites et session d'appels complete pendant 2 jours, sans
-          carte bancaire.
-        </p>
+        <strong>Quota gratuit atteint</strong>
+        <p>Passez en Premium : exports illimités, session d'appels complète.</p>
         <button id="trialBtn" class="btn btn--trial">
-          Demarrer l'essai gratuit 2 jours
+          Essai gratuit 2 jours — 15 €/mois ensuite
         </button>
-        <button id="subscribeBtn" class="btn btn--trial hidden">
-          S'abonner — 15 €/mois
-        </button>
-        <div class="or-divider"><span>Deja abonne ?</span></div>
-        <button id="loginBtn" class="btn btn--sm">Restaurer mon abonnement</button>
-        <div id="accessStatus" class="license-status hidden"></div>
+        <div class="or-divider"><span>J'ai déjà une clé de licence</span></div>
+        <div class="license-row">
+          <input
+            id="licenseInput"
+            type="text"
+            class="license-input"
+            placeholder="XXXX-XXXX-XXXX-XXXX"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button id="activateBtn" class="btn btn--sm">Activer</button>
+        </div>
+        <div id="licenseStatus" class="license-status hidden"></div>
       </div>
     </main>
 
@@ -130,10 +100,9 @@
         <div class="quota-bar"><span id="quotaFill" class="quota-fill"></span></div>
         <span id="quotaText" class="quota-text">-</span>
       </div>
-      <div class="privacy">100% local. Vos donnees ne quittent jamais ce navigateur.</div>
+      <div class="privacy">Source : base SIRENE (INSEE) — données officielles.</div>
     </footer>
 
-    <script src="vendor/ExtPay.js"></script>
     <script type="module" src="popup.js"></script>
   </body>
 </html>

@@ -1,20 +1,21 @@
 import { buildXlsx, downloadXlsx } from "./lib/xlsx.js";
-import { getAccess } from "./lib/access.js";
+import { validate } from "./lib/license.js";
 
 const STORAGE_KEY = "callSession";
 
 const STATUSES = [
-  { value: "pending",        label: "A appeler",      color: "#94a3b8" },
-  { value: "no_answer",      label: "Pas de reponse", color: "#d97706" },
-  { value: "interested",     label: "Interesse",      color: "#059669" },
-  { value: "not_interested", label: "Pas interesse",  color: "#dc2626" },
+  { value: "pending",        label: "À appeler",       color: "#94a3b8" },
+  { value: "no_answer",      label: "Pas de réponse",  color: "#d97706" },
+  { value: "interested",     label: "Intéressé",       color: "#059669" },
+  { value: "not_interested", label: "Pas intéressé",   color: "#dc2626" },
   { value: "callback",       label: "Rappeler",       color: "#2563eb" },
 ];
 
-// Colonnes exportees en XLSX (callStatus/callNote/callbackDate declares dans csv.js)
+// Colonnes exportees en XLSX (callStatus/callNote/callbackDate declares dans columns.js)
 const SESSION_COLS = [
-  "name", "callStatus", "phone", "category", "rating", "reviews",
-  "address", "website", "score", "callNote", "callbackDate",
+  "name", "callStatus", "category", "address", "city", "siret",
+  "trancheEffectif", "dateCreation", "phone", "website",
+  "score", "callNote", "callbackDate",
 ];
 
 let leads = [];
@@ -138,7 +139,7 @@ function makeCallbackBadge(lead) {
   badge.style.background = overdue ? "#fef2f2" : "#eff6ff";
   badge.style.color = overdue ? "#991b1b" : "#1e40af";
   badge.style.borderColor = overdue ? "#fecaca" : "#bfdbfe";
-  badge.textContent = overdue ? `Rappeler ! ${d}/${m}` : `Rappeler le ${d}/${m}`;
+  badge.textContent = overdue ? `À rappeler ! ${d}/${m}` : `Rappeler le ${d}/${m}`;
   return badge;
 }
 
@@ -193,11 +194,11 @@ function makeListCard(lead, index) {
   top.append(nameEl, topRight);
   card.append(top);
 
-  // Meta : categorie · note · avis
+  // Meta : categorie · effectif · SIRET
   const metaParts = [
     lead.category,
-    lead.rating ? `${lead.rating}★` : null,
-    lead.reviews ? `${lead.reviews} avis` : null,
+    lead.trancheEffectif || null,
+    lead.siret ? `SIRET ${lead.siret}` : null,
   ].filter(Boolean);
   if (metaParts.length) {
     const meta = document.createElement("div");
@@ -258,7 +259,7 @@ function makeListCard(lead, index) {
   noteWrap.className = "note-wrap";
   const noteArea = document.createElement("textarea");
   noteArea.className = "note-area";
-  noteArea.placeholder = "Note (budget, contact, details...)";
+  noteArea.placeholder = "Note : budget, interlocuteur, détails...";
   noteArea.rows = 2;
   noteArea.value = lead.callNote || "";
   noteArea.addEventListener("input", () => changeNote(index, noteArea.value));
@@ -442,19 +443,16 @@ function setView(mode) {
 // --- Init ---
 
 async function init() {
-  const { allowed, status } = await getAccess();
-  if (!allowed) {
+  const { valid } = await validate();
+  if (!valid) {
     const blocked = document.getElementById("emptyState");
     blocked.classList.remove("hidden");
     blocked.replaceChildren(
       Object.assign(document.createElement("p"), {
-        textContent:
-          status === "none"
-            ? "Session d'appels disponible pendant l'essai gratuit."
-            : "Votre essai est termine.",
+        textContent: "Session d'appels réservée aux membres Premium.",
       }),
       Object.assign(document.createElement("p"), {
-        textContent: "Ouvrez le popup MapsLeads pour demarrer l'essai ou vous abonner.",
+        textContent: "Activez votre licence depuis le popup MapsLeads.",
       })
     );
     return;
