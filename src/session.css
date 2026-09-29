@@ -504,3 +504,10 @@ body {
 .hidden {
   display: none !important;
 }
+
+/* .s-list, .s-filters et .s-kanban declarent display:flex, ce qui l'emporte sur
+   le display:none que le navigateur applique a l'attribut hidden. Sans cette
+   regle, basculer en vue Kanban ne masque ni la liste ni les filtres. */
+[hidden] {
+  display: none !important;
+}

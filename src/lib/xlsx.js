@@ -11,22 +11,22 @@
 // comme une formule, donc l'injection de formule (=,+,-,@) est neutralisee par
 // construction, sans traitement particulier.
 
-import { ALL_COLUMNS } from "./csv.js";
+import { ALL_COLUMNS } from "./columns.js";
 
 // Largeur des colonnes en "caracteres" Excel. Genereuse pour les champs de
 // contact qui debordent le plus (nom, site web, adresse, lien).
 const WIDTHS = {
   name: 34,
+  siret: 18,
+  category: 36,
+  codeNaf: 12,
+  address: 46,
+  city: 22,
+  trancheEffectif: 20,
+  dateCreation: 14,
   phone: 16,
   website: 42,
-  address: 46,
-  category: 20,
-  price: 9,
-  rating: 7,
-  reviews: 9,
-  services: 24,
   score: 12,
-  mapsUrl: 48,
   callStatus: 16,
   callNote: 44,
   callbackDate: 16,
@@ -34,7 +34,7 @@ const WIDTHS = {
 const DEFAULT_WIDTH = 18;
 
 // Colonnes a ecrire en cellule numerique (tri/filtre corrects dans Excel).
-const NUMERIC_KEYS = new Set(["rating", "reviews", "score"]);
+const NUMERIC_KEYS = new Set(["score"]);
 
 // --- CRC32 (requis par l'entete ZIP) -------------------------------------
 const CRC_TABLE = (() => {
