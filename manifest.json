@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "MapsLeads",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Trouvez des prospects par métier et par ville dans la base SIRENE de l'INSEE. Export Excel et suivi d'appels intégré.",
   "action": {
     "default_popup": "src/popup.html",

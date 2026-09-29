@@ -203,6 +203,7 @@ body {
 }
 
 .license-row .btn--sm {
+  width: auto;
   flex: 0 0 auto;
   white-space: nowrap;
 }
